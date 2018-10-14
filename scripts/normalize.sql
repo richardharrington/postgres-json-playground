@@ -3,36 +3,34 @@
 DROP TABLE IF EXISTS inner_table CASCADE;
 
 CREATE TABLE inner_table(
-  id SERIAL PRIMARY KEY,
-  external_id INT UNIQUE,
+  id INT PRIMARY KEY,
   b TEXT,
   c TEXT
 );
 
-INSERT INTO inner_table(external_id, b, c)
+INSERT INTO inner_table(id, b, c)
 (
-  SELECT (j.doc::JSON -> 'inner_table' ->> 'external_id')::INT,
+  SELECT (j.doc::JSON -> 'inner_table' ->> 'id')::INT,
          j.doc::JSON -> 'inner_table' ->> 'b',
          j.doc::JSON -> 'inner_table' ->> 'c'
   FROM import.raw_json AS j
 )
-ON CONFLICT (external_id) DO NOTHING;
+ON CONFLICT (id) DO NOTHING;
 
 -- outer_table (which depends on inner_table)
 
 DROP TABLE IF EXISTS outer_table;
 
 CREATE TABLE outer_table(
-  id SERIAL PRIMARY KEY,
-  external_id INT UNIQUE,
+  id INT PRIMARY KEY,
   a INT,
-  inner_table_external_id INT REFERENCES inner_table (external_id)
+  inner_table_id INT REFERENCES inner_table (id)
 );
 
-INSERT INTO outer_table(external_id, a, inner_table_external_id)
+INSERT INTO outer_table(id, a, inner_table_id)
 (
-  SELECT (j.doc::JSON ->> 'external_id')::INT,
+  SELECT (j.doc::JSON ->> 'id')::INT,
          (j.doc::JSON ->> 'a')::INT,
-         (j.doc::JSON -> 'inner_table' ->> 'external_id')::INT
+         (j.doc::JSON -> 'inner_table' ->> 'id')::INT
   FROM import.raw_json AS j
 );
