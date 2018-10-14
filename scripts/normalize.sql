@@ -1,36 +1,36 @@
--- inner_table (which outer_table depends on)
+-- weapon (which weapon_inventory depends on)
 
-DROP TABLE IF EXISTS inner_table CASCADE;
+DROP TABLE IF EXISTS weapon CASCADE;
 
-CREATE TABLE inner_table(
+CREATE TABLE weapon(
   id INT PRIMARY KEY,
-  b TEXT,
-  c TEXT
+  name TEXT,
+  special_power TEXT
 );
 
-INSERT INTO inner_table(id, b, c)
+INSERT INTO weapon(id, name, special_power)
 (
-  SELECT (j.doc::JSON -> 'inner_table' ->> 'id')::INT,
-         j.doc::JSON -> 'inner_table' ->> 'b',
-         j.doc::JSON -> 'inner_table' ->> 'c'
+  SELECT (j.doc::JSON -> 'weapon' ->> 'id')::INT,
+         j.doc::JSON -> 'weapon' ->> 'name',
+         j.doc::JSON -> 'weapon' ->> 'special_power'
   FROM import.raw_json AS j
 )
 ON CONFLICT (id) DO NOTHING;
 
--- outer_table (which depends on inner_table)
+-- weapon_inventory (which depends on weapon)
 
-DROP TABLE IF EXISTS outer_table;
+DROP TABLE IF EXISTS weapon_inventory;
 
-CREATE TABLE outer_table(
+CREATE TABLE weapon_inventory(
   id INT PRIMARY KEY,
-  a INT,
-  inner_table_id INT REFERENCES inner_table (id)
+  quantity INT,
+  weapon_id INT REFERENCES weapon (id)
 );
 
-INSERT INTO outer_table(id, a, inner_table_id)
+INSERT INTO weapon_inventory(id, quantity, weapon_id)
 (
   SELECT (j.doc::JSON ->> 'id')::INT,
-         (j.doc::JSON ->> 'a')::INT,
-         (j.doc::JSON -> 'inner_table' ->> 'id')::INT
+         (j.doc::JSON ->> 'quantity')::INT,
+         (j.doc::JSON -> 'weapon' ->> 'id')::INT
   FROM import.raw_json AS j
 );
