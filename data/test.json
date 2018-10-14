@@ -1,3 +1,3 @@
-{"external_id":101,"a":5,"b":{"external_id":201,"c":"what up","d":"heya"}}
-{"external_id":102,"a":6,"b":{"external_id":202,"c":"what up2","d":"heya2"}}
-{"external_id":103,"a":7,"b":{"external_id":201,"c":"what up","d":"heya"}}
+{"external_id":101,"a":5,"inner_table":{"external_id":201,"b":"what up","c":"heya"}}
+{"external_id":102,"a":6,"inner_table":{"external_id":202,"b":"what up2","c":"heya2"}}
+{"external_id":103,"a":7,"inner_table":{"external_id":201,"b":"what up","c":"heya"}}
