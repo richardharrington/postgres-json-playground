@@ -1,2 +1,3 @@
-{"a":5,"b":{"c":"what up","d":"heya"}}
-{"a":6,"b":{"c":"what up2","d":"heya2"}}
+{"external_id":101,"a":5,"b":{"external_id":201,"c":"what up","d":"heya"}}
+{"external_id":102,"a":6,"b":{"external_id":202,"c":"what up2","d":"heya2"}}
+{"external_id":103,"a":7,"b":{"external_id":201,"c":"what up","d":"heya"}}
